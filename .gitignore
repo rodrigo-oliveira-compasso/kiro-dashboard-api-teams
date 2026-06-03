@@ -1,0 +1,5 @@
+.git
+bin
+obj
+.kiro
+appsettings.Development.json
