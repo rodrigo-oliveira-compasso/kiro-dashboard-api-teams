@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using TeamsApi.Data;
 using TeamsApi.Middleware;
 using TeamsApi.Repositories;
 using TeamsApi.Services;
@@ -89,35 +90,7 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        await context.Database.ExecuteSqlRawAsync("""
-            CREATE TABLE IF NOT EXISTS professionals (
-                "Id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-                "AwsUserId" varchar(100) NOT NULL,
-                "Name" varchar(255) NOT NULL,
-                "Email" varchar(255) NOT NULL,
-                "CreatedAt" timestamp with time zone NOT NULL DEFAULT now(),
-                "UpdatedAt" timestamp with time zone,
-                CONSTRAINT "UQ_professionals_AwsUserId" UNIQUE ("AwsUserId"),
-                CONSTRAINT "UQ_professionals_Email" UNIQUE ("Email")
-            );
-
-            CREATE TABLE IF NOT EXISTS squads (
-                "Id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-                "Name" varchar(255) NOT NULL,
-                "Description" varchar(500),
-                "CreatedAt" timestamp with time zone NOT NULL DEFAULT now(),
-                "UpdatedAt" timestamp with time zone,
-                CONSTRAINT "UQ_squads_Name" UNIQUE ("Name")
-            );
-
-            CREATE TABLE IF NOT EXISTS squad_professionals (
-                "SquadId" uuid NOT NULL REFERENCES squads("Id") ON DELETE CASCADE,
-                "ProfessionalId" uuid NOT NULL REFERENCES professionals("Id") ON DELETE CASCADE,
-                "AssignedAt" timestamp with time zone NOT NULL DEFAULT now(),
-                PRIMARY KEY ("SquadId", "ProfessionalId")
-            );
-        """);
-
+        await context.Database.EnsureCreatedAsync();
         logger.LogInformation("Teams tables ensured.");
     }
     catch (Exception ex)

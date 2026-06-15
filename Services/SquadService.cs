@@ -1,4 +1,5 @@
-using TeamsApi.Models.DTOs;
+using TeamsApi.Models.Requests;
+using TeamsApi.Models.Responses;
 using TeamsApi.Models.Entities;
 using TeamsApi.Repositories;
 

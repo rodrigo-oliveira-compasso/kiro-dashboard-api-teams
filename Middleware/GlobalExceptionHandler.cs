@@ -1,6 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
-using TeamsApi.Models.DTOs;
+using TeamsApi.Models.Responses;
 
 namespace TeamsApi.Middleware;
 

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TeamsApi.Data;
 using TeamsApi.Models.Entities;
 
 namespace TeamsApi.Repositories;

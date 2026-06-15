@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TeamsApi.Models.Entities;
 
-namespace TeamsApi.Repositories;
+namespace TeamsApi.Data;
 
 public class AppDbContext : DbContext
 {
