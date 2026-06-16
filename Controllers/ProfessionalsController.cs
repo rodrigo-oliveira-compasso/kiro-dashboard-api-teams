@@ -22,6 +22,19 @@ public class ProfessionalsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("paginated")]
+    public async Task<ActionResult<PaginatedResponse<ProfessionalResponse>>> GetPaginated(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? sortKey = null,
+        [FromQuery] string? sortDirection = null,
+        [FromQuery] string? search = null,
+        CancellationToken ct = default)
+    {
+        var result = await _service.GetPaginatedAsync(page, pageSize, sortKey, sortDirection, search, ct);
+        return Ok(result);
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<ProfessionalResponse>> GetById(Guid id, CancellationToken ct)
     {

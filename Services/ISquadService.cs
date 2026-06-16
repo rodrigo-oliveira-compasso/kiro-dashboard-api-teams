@@ -6,6 +6,7 @@ namespace TeamsApi.Services;
 public interface ISquadService
 {
     Task<List<SquadResponse>> GetAllAsync(CancellationToken ct);
+    Task<PaginatedResponse<SquadResponse>> GetPaginatedAsync(int page, int pageSize, string? sortKey, string? sortDirection, string? search, CancellationToken ct);
     Task<SquadResponse?> GetByIdAsync(Guid id, CancellationToken ct);
     Task<SquadResponse> CreateAsync(CreateSquadRequest request, CancellationToken ct);
     Task<SquadResponse?> UpdateAsync(Guid id, UpdateSquadRequest request, CancellationToken ct);

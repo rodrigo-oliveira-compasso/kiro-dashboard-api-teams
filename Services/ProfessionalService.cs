@@ -17,6 +17,41 @@ public class ProfessionalService : IProfessionalService
         return professionals.Select(ToResponse).ToList();
     }
 
+    public async Task<PaginatedResponse<ProfessionalResponse>> GetPaginatedAsync(
+        int page, int pageSize, string? sortKey, string? sortDirection, string? search, CancellationToken ct)
+    {
+        var professionals = await _repository.GetAllAsync(ct);
+        var items = professionals.Select(ToResponse).ToList();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.ToLowerInvariant();
+            items = items.Where(p =>
+                p.Name.ToLowerInvariant().Contains(term) ||
+                p.Email.ToLowerInvariant().Contains(term) ||
+                p.AwsUserId.ToLowerInvariant().Contains(term)
+            ).ToList();
+        }
+
+        if (!string.IsNullOrWhiteSpace(sortKey))
+        {
+            var prop = typeof(ProfessionalResponse).GetProperty(sortKey,
+                System.Reflection.BindingFlags.IgnoreCase | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            if (prop is not null)
+            {
+                items = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase)
+                    ? items.OrderByDescending(x => prop.GetValue(x)).ToList()
+                    : items.OrderBy(x => prop.GetValue(x)).ToList();
+            }
+        }
+
+        var totalItems = items.Count;
+        var totalPages = totalItems == 0 ? 0 : (int)Math.Ceiling((double)totalItems / pageSize);
+        var paged = items.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+        return new PaginatedResponse<ProfessionalResponse>(paged, new PaginationMetadata(totalItems, page, pageSize, totalPages));
+    }
+
     public async Task<ProfessionalResponse?> GetByIdAsync(Guid id, CancellationToken ct)
     {
         var professional = await _repository.GetByIdAsync(id, ct);

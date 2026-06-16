@@ -6,6 +6,7 @@ namespace TeamsApi.Services;
 public interface IProfessionalService
 {
     Task<List<ProfessionalResponse>> GetAllAsync(CancellationToken ct);
+    Task<PaginatedResponse<ProfessionalResponse>> GetPaginatedAsync(int page, int pageSize, string? sortKey, string? sortDirection, string? search, CancellationToken ct);
     Task<ProfessionalResponse?> GetByIdAsync(Guid id, CancellationToken ct);
     Task<ProfessionalResponse> CreateAsync(CreateProfessionalRequest request, CancellationToken ct);
     Task<ProfessionalResponse?> UpdateAsync(Guid id, UpdateProfessionalRequest request, CancellationToken ct);
