@@ -12,6 +12,7 @@ public class SquadRepository : ISquadRepository
 
     public async Task<List<Squad>> GetAllAsync(CancellationToken ct) =>
         await _context.Squads
+            .AsNoTracking()
             .Include(s => s.SquadProfessionals).ThenInclude(sp => sp.Professional)
             .OrderBy(s => s.Name)
             .ToListAsync(ct);
